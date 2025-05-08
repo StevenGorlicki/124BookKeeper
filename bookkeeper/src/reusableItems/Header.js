@@ -1,6 +1,12 @@
 import './Header.css';
+import { Link, useLocation } from 'react-router-dom';
 
 function Header() {
+  const location = useLocation();
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
   return (
     <header className="app-header">
       <div className="container header-content">
@@ -49,12 +55,12 @@ function Header() {
       <nav className="app-nav">
         <div className="container">
           <ul className="nav-items">
-            <li><a href="/reading">Reading List</a></li>
-            <li><a href="/notes">Notes</a></li>
-            <li><a href="/profile">Profile</a></li>
-            <li><a href="/community">Community</a></li>
-            <li><a href="/books">Books</a></li>
-            <li><a href="/faq">FAQ/Help</a></li>
+            <li><Link to="/reading-list" className={isActive('/reading-list') ? 'active' : ''}>Reading List</Link></li>
+            <li><Link to="/notes" className={isActive('/notes') ? 'active' : ''}>Notes</Link></li>
+            <li><Link to="/profile" className={isActive('/profile') ? 'active' : ''}>Profile</Link></li>
+            <li><Link to="/community" className={isActive('/community') ? 'active' : ''}>Community</Link></li>
+            <li><Link to="/books" className={isActive('/books') ? 'active' : ''}>Books</Link></li>
+            <li><Link to="/faq" className={isActive('/faq') ? 'active' : ''}>FAQ/Help</Link></li>
           </ul>
         </div>
       </nav>
