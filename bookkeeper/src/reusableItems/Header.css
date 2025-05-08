@@ -1,0 +1,121 @@
+/* Header-specific styles that won't conflict with Welcome page */
+.app-header {
+  background-color: var(--primary);
+  color: var(--white);
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  height: 60px;
+}
+
+.header-logo-container {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  height: 100%;
+}
+
+.header-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+}
+
+.header-logo-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--white);
+}
+
+.search-bar {
+  flex-grow: 1;
+  margin: 0 2rem;
+  max-width: 400px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .search-bar {
+    display: none;
+  }
+}
+
+.app-nav {
+  background-color: var(--white);
+  padding: 0.5rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  width: 100%;
+}
+
+.nav-items {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-items li {
+  flex: 1;
+  text-align: center;
+}
+
+.nav-items a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  display: block;
+  padding: 0.7rem;
+  transition: all 0.3s ease;
+}
+
+.nav-items a:hover,
+.nav-items a.active {
+  color: var(--primary);
+  background-color: var(--bg-light);
+  border-radius: 4px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
