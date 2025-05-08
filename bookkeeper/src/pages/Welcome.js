@@ -5,7 +5,7 @@ function Welcome() {
   return (
     <div className="welcome-container">
       <header>
-        <h1>Welcome to BookKeeper (Title of App)</h1>
+        <h1>Welcome to BookKeeper</h1>
       </header>
 
       <div className="main-content">
@@ -20,8 +20,7 @@ function Welcome() {
         <div className="welcome-text">
           <h2>Track your reading journey</h2>
           <p>
-            Keep notes and build your personal library with BookKeeper.
-            (Slogan here idk)
+            Build your own personal library with BookKeeper!
           </p>
         </div>
 
