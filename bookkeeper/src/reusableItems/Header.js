@@ -58,7 +58,7 @@ function Header() {
             <li><Link to="/reading-list" className={isActive('/reading-list') ? 'active' : ''}>Reading List</Link></li>
             <li><Link to="/notes" className={isActive('/notes') ? 'active' : ''}>Notes</Link></li>
             <li><Link to="/profile" className={isActive('/profile') ? 'active' : ''}>Profile</Link></li>
-            <li><Link to="/community" className={isActive('/community') ? 'active' : ''}>Community</Link></li>
+            <li><Link to="/book-search" className={isActive('/book-search') ? 'active' : ''}>Book Search</Link></li>
             <li><Link to="/books" className={isActive('/books') ? 'active' : ''}>Books</Link></li>
             <li><Link to="/faq" className={isActive('/faq') ? 'active' : ''}>FAQ/Help</Link></li>
           </ul>

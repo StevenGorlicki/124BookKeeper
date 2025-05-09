@@ -37,6 +37,7 @@
   cursor: pointer;
   color: var(--text-dark);
   transition: background 0.2s;
+  text-decoration: none;
 }
 
 .nav-btn:hover, .create-list-btn:hover {
@@ -83,11 +84,43 @@
   box-shadow: 0 2px 8px rgba(43, 93, 80, 0.08); /* use primary color for shadow tint */
 }
 
-.reading-list-column h2 {
-  font-size: 1.3rem;
+.reading-list-column.full-width {
+  width: 100%;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 16px;
+}
+
+.list-header h2 {
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--primary-dark);
+  margin: 0;
+}
+
+.delete-list-btn {
+  background: transparent;
+  border: none;
+  color: #999;
+  font-size: 1.4rem;
+  font-weight: bold;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.delete-list-btn:hover {
+  background-color: #f0f0f0;
+  color: #ff5252;
 }
 
 .book-card {
@@ -146,10 +179,100 @@
   font-size: 1rem;
 }
 
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--white);
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content h2 {
+  color: var(--primary-dark);
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cancel-btn, .create-btn, .delete-btn {
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  color: var(--text-dark);
+}
+
+.create-btn {
+  background: var(--primary);
+  border: 1px solid var(--primary-dark);
+  color: var(--white);
+}
+
+.delete-btn {
+  background: #ff5252;
+  border: 1px solid #e04444;
+  color: var(--white);
+}
+
+.delete-warning {
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
 @media (max-width: 900px) {
   .reading-list-columns {
     flex-direction: column;
     gap: 18px;
     padding: 18px;
   }
-} 
+
+  .modal-content {
+    width: 95%;
+    padding: 16px;
+  }
+}
