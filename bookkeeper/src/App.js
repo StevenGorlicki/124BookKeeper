@@ -3,11 +3,12 @@ import Welcome from './pages/Welcome';
 import ExamplePage from './pages/ExamplePage';
 import AboutPage from './pages/AboutPage';
 import ReadingList from './pages/ReadingList';
-import Notes from './pages/Notes';
+import Notes from './pages/NotesPage';
 import Profile from './pages/Profile';
 import BookSearch from './pages/BookSearch';
 import Books from './pages/Books';
 import FAQ from './pages/FAQ';
+import NotFound from './pages/NotFound'
 
 function App() {
   return (
@@ -22,6 +23,11 @@ function App() {
         <Route path="/book-search" element={<BookSearch />} />
         <Route path="/books" element={<Books />} />
         <Route path="/faq" element={<FAQ />} />
+
+
+        {/*  KEEP THIS AS THE LAST ROUTE AS FALLBACK*/}
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
