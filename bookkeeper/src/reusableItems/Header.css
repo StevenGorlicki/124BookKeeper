@@ -128,3 +128,68 @@
   margin: 0 auto;
   padding: 0 1rem;
 }
+
+.header-link {
+  color: var(--white);
+  text-decoration: none;
+  margin-right: 1rem; /* Add spacing between links */
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.header-link:hover {
+  color: var(--secondary); /* Change color on hover */
+}
+
+/* Header-specific styles */
+.app-header { /* ... */ }
+.header-content { /* ... */ }
+.header-logo-container { /* ... */ }
+.header-logo { /* ... */ }
+.header-logo-text { /* ... */ }
+.search-bar { /* ... */ }
+.search-bar input { /* ... */ }
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative; /* Add this for absolute positioning of the dropdown */
+}
+.user-avatar-button {
+    padding: 0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-weight: bold;
+  cursor: pointer; /* Add this to indicate it's clickable */
+}
+
+.user-avatar:hover {
+    background-color: #d1d5db;
+}
+
+/* Add styles for the header links */
+.header-link {
+  color: var(--white);
+  text-decoration: none;
+  margin-right: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.header-link:hover {
+  color: var(--secondary);
+}

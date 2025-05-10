@@ -1,5 +1,7 @@
-import './Header.css';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import '../assets/globalStyles/global.css';
+import './Header.css';
 
 function Header() {
   const location = useLocation();
@@ -33,6 +35,8 @@ function Header() {
         </div>
 
         <div className="user-menu">
+          <Link to="/about" className="header-link">About</Link>
+          <Link to="/faq" className="header-link">FAQ/Help</Link>
           <a href="#" style={{ color: 'white' }}>
             <svg
               width="20"
@@ -59,7 +63,6 @@ function Header() {
             <li><Link to="/notes" className={isActive('/notes') ? 'active' : ''}>Notes</Link></li>
             <li><Link to="/share" className={isActive('/share') ? 'active' : ''}>Share</Link></li>
             <li><Link to="/book-search" className={isActive('/book-search') ? 'active' : ''}>Book Search</Link></li>
-            <li><Link to="/faq" className={isActive('/faq') ? 'active' : ''}>FAQ/Help</Link></li>
           </ul>
         </div>
       </nav>
