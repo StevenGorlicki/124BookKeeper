@@ -1,0 +1,231 @@
+.faq-page-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.faq-page-main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  width: 100%;
+}
+
+.faq-page-main-content h1 {
+  font-size: 2rem;
+  color: var(--primary-dark);
+  margin-bottom: 1.5rem;
+}
+
+.faq-page-quick-nav {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.faq-page-quick-nav h2 {
+  font-size: 1.2rem;
+  color: var(--primary-dark);
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.faq-page-category-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.faq-page-category-link {
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-light, #e0f2f1);
+  color: var(--primary, #009688);
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.faq-page-category-link:hover {
+  background-color: var(--primary, #009688);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.faq-page-content {
+  margin-bottom: 3rem;
+}
+
+.faq-page-category-section {
+  margin-bottom: 2.5rem;
+  scroll-margin-top: 2rem;
+}
+
+.faq-page-category-title {
+  color: var(--primary-dark, #00796b);
+  border-bottom: 2px solid var(--primary, #009688);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.faq-page-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.faq-page-item {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.faq-page-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.faq-page-question {
+  padding: 1.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.faq-page-question:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.faq-page-icon {
+  transition: transform 0.3s ease;
+}
+
+.faq-page-item.expanded .faq-page-icon {
+  transform: rotate(180deg);
+}
+
+.faq-page-answer {
+  padding: 0 1.5rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.faq-page-item.expanded .faq-page-answer {
+  padding: 0 1.5rem 1.5rem;
+  max-height: 500px;
+  opacity: 1;
+}
+
+.faq-page-answer p {
+  color: var(--text-light, #555);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.faq-page-contact-support {
+  background-color: white;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.faq-page-contact-support h2 {
+  color: var(--primary-dark, #00796b);
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.faq-page-contact-support p {
+  color: var(--text-light, #555);
+  margin-bottom: 1.5rem;
+}
+
+.faq-page-contact-btn {
+  background-color: var(--primary, #009688);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.faq-page-contact-btn:hover {
+  background-color: var(--primary-dark, #00796b);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.faq-page-email {
+  color: var(--text-light, #555);
+  font-size: 0.9rem;
+}
+
+.faq-page-email a {
+  color: var(--primary, #009688);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.faq-page-email a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .faq-page-category-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .faq-page-category-link {
+    text-align: center;
+  }
+
+  .faq-page-question {
+    padding: 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .faq-page-item.expanded .faq-page-answer {
+    padding: 0 1.2rem 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .faq-page-main-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .faq-page-main-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .faq-page-category-title {
+    font-size: 1.3rem;
+  }
+
+  .faq-page-contact-support {
+    padding: 1.5rem;
+  }
+}

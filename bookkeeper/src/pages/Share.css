@@ -1,0 +1,340 @@
+.share-page {
+  padding: 2rem 0;
+  min-height: calc(100vh - 180px); /* Adjusted for header and footer */
+}
+
+.page-title {
+  color: var(--primary);
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.share-options {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+}
+
+.share-type-selector {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.type-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--bg-light);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.type-btn:hover {
+  background-color: var(--bg-hover);
+}
+
+.type-btn.active {
+  background-color: var(--primary);
+  color: var(--white);
+  border-color: var(--primary-dark);
+}
+
+.share-content-selector {
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 1rem;
+  color: var(--text);
+  background-color: var(--white);
+}
+
+.generate-link-btn {
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.generate-link-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.generate-link-btn:disabled {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  cursor: not-allowed;
+}
+
+.share-link-container {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.share-link-container h3 {
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.share-link-box {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.share-link-box input {
+  flex-grow: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--text);
+  background-color: var(--bg-light);
+}
+
+.copy-btn {
+  background-color: var(--secondary);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  padding: 0 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.copy-btn:hover {
+  background-color: var(--secondary-dark);
+}
+
+.social-share-buttons {
+  margin-top: 1.5rem;
+}
+
+.social-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  color: var(--white);
+  transition: all 0.2s ease;
+}
+
+.social-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.social-btn.facebook {
+  background-color: #3b5998;
+}
+
+.social-btn.facebook:hover {
+  background-color: #2d4373;
+}
+
+.social-btn.twitter {
+  background-color: #1da1f2;
+}
+
+.social-btn.twitter:hover {
+  background-color: #0c85d0;
+}
+
+.social-btn.instagram {
+  background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+}
+
+.social-btn.instagram:hover {
+  opacity: 0.9;
+}
+
+.social-btn.whatsapp {
+  background-color: #25d366;
+}
+
+.social-btn.whatsapp:hover {
+  background-color: #20bd5c;
+}
+
+.share-preview {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.preview-container h3 {
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.preview-card {
+  background-color: var(--bg-light);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.preview-book-cover {
+  flex-shrink: 0;
+}
+
+.book-cover-placeholder {
+  width: 80px;
+  height: 120px;
+  background: linear-gradient(135deg, #f2f2f2, #e0e0e0);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.book-cover-placeholder::after {
+  content: "📚";
+  font-size: 2rem;
+}
+
+.preview-note-icon {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  background-color: var(--primary-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+
+.preview-content {
+  flex-grow: 1;
+}
+
+.preview-content h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-dark);
+  font-size: 1.1rem;
+}
+
+.preview-content p {
+  margin: 0.5rem 0;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.progress-bar {
+  height: 10px;
+  background-color: var(--bg-hover);
+  border-radius: 5px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--primary);
+  border-radius: 5px;
+}
+
+.preview-note-text {
+  font-style: italic;
+  color: var(--text-light);
+  margin-top: 1rem;
+}
+
+/* Add these CSS variables to your root or index.css if they don't exist */
+:root {
+  --primary: #2b5d50;
+  --primary-dark: #1e4a3e;
+  --primary-light: #e8f2ef;
+  --secondary: #f0844a;
+  --secondary-dark: #e0743a;
+  --white: #ffffff;
+  --text: #333333;
+  --text-dark: #222222;
+  --text-light: #666666;
+  --bg-light: #f7f9f8;
+  --bg-hover: #edf1f0;
+  --border: #dce4e1;
+}
+
+@media (max-width: 768px) {
+  .share-options {
+    padding: 1.5rem;
+  }
+
+  .share-type-selector {
+    flex-direction: column;
+  }
+
+  .type-btn {
+    width: 100%;
+  }
+
+  .social-buttons {
+    flex-direction: column;
+  }
+
+  .social-btn {
+    width: 100%;
+  }
+
+  .preview-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .preview-content {
+    margin-top: 1rem;
+  }
+}

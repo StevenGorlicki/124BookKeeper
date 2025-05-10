@@ -7,8 +7,9 @@ import Notes from './pages/NotesPage';
 import Profile from './pages/Profile';
 import BookSearch from './pages/BookSearch';
 import Books from './pages/Books';
-import FAQ from './pages/FAQ';
+import FAQ from './pages/FAQPage';
 import NotFound from './pages/NotFound'
+import Share from './pages/Share'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/book-search" element={<BookSearch />} />
         <Route path="/books" element={<Books />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/share" element={<Share />} />
 
 
         {/*  KEEP THIS AS THE LAST ROUTE AS FALLBACK*/}
