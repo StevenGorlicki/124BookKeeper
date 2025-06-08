@@ -1,7 +1,47 @@
 import '../assets/globalStyles/global.css';
 import './Welcome.css';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import API from '../api/axios';
 
 function Welcome() {
+  const [modalType, setModalType] = useState(null); // 'login' or 'signup'
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [status, setStatus] = useState('');
+
+  const navigate = useNavigate();
+
+  const closeModal = () => {
+    setModalType(null);
+    setEmail('');
+    setPassword('');
+    setStatus('');
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await API.post('/auth/login', { email, password });
+      localStorage.setItem('token', res.data.token);
+      setStatus('Login successful!');
+      setTimeout(() => navigate('/notes'), 500);
+    } catch (err) {
+      setStatus(err.response?.data?.msg || 'Login failed');
+    }
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await API.post('/auth/signup', { email, password });
+      setStatus('Account created! You can now log in.');
+      setModalType('login'); // Switch to login
+    } catch (err) {
+      setStatus(err.response?.data?.msg || 'Signup failed');
+    }
+  };
+
   return (
     <div className="welcome-container">
       <header>
@@ -19,33 +59,42 @@ function Welcome() {
 
         <div className="welcome-text">
           <h2>Track your reading journey</h2>
-          <p>
-            Build your own personal library with BookKeeper!
-          </p>
+          <p>Build your own personal library with BookKeeper!</p>
         </div>
 
         <div className="auth-options">
-          <a href="#" className="btn btn-secondary">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 22C6.5 22 2 17.5 2 12S6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"></path>
-              <path d="M12 16v-4"></path>
-              <path d="M12 8h.01"></path>
-            </svg>
-            Login with Google
-          </a>
-          <a href="#" className="btn btn-primary">Create Account</a>
-          <a href="#" className="btn btn-secondary">Login with Email</a>
+          <a href="#" className="btn btn-secondary">Login with Google</a>
+          <button className="btn btn-primary" onClick={() => setModalType('signup')}>Create Account</button>
+          <button className="btn btn-secondary" onClick={() => setModalType('login')}>Login with Email</button>
         </div>
       </div>
+
+      {modalType && (
+        <div className="login-modal">
+          <form className="login-form" onSubmit={modalType === 'login' ? handleLogin : handleSignup}>
+            <h3>{modalType === 'login' ? 'Log In' : 'Create Account'}</h3>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button type="submit" className="btn btn-primary">
+              {modalType === 'login' ? 'Login' : 'Sign Up'}
+            </button>
+            {status && <p>{status}</p>}
+            <button type="button" className="btn btn-secondary" onClick={closeModal}>Cancel</button>
+          </form>
+        </div>
+      )}
 
       <footer className="welcome-footer">
         <p>&copy; 2025 Bookkeeper | INF 124 Group 27</p>

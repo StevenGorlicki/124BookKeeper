@@ -3,121 +3,49 @@ import Header from '../reusableItems/Header';
 import Footer from '../reusableItems/Footer';
 import '../assets/globalStyles/global.css';
 import './NotesPage.css';
+import API from '../api/axios';
 
 function NotesPage() {
-  // State for notes data
   const [notes, setNotes] = useState([]);
-
-  // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const notesPerPage = 9; // Display 9 notes per page
+  const notesPerPage = 9;
 
-  // State for UI controls
   const [sortBy, setSortBy] = useState('title');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // State for modals
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentNote, setCurrentNote] = useState(null);
 
-  // Form states for create/edit
   const [formData, setFormData] = useState({
     bookTitle: '',
     author: '',
     content: ''
   });
 
-  // Load notes data
   useEffect(() => {
-    // This would be replaced with actual API call to your database
     const loadNotes = async () => {
       try {
-        // Simulate API call with timeout
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // For demo purposes, load some sample data
-        // In production, this would be replaced with fetch() call to your API
-        const sampleNotes = [
-        {
-          id: 1,
-          bookTitle: 'The Design of Everyday Things',
-          author: 'Don Norman',
-          content: 'Heres some notes for the first book'
-        },
-        {
-          id: 2,
-          bookTitle: 'Clean Code',
-          author: 'Robert C. Martin',
-          content: 'Heres some notes for the second book'
-        },
-        {
-          id: 3,
-          bookTitle: 'Thinking, Fast and Slow',
-          author: 'Daniel Kahneman',
-          content: 'heres some notes for the third book'
-        },
-        {
-          id: 4,
-          bookTitle: 'Example Title',
-          author: 'Example Author',
-          content: 'Example notes'
-        },
-        {
-          id: 5,
-          bookTitle: 'Example Title',
-          author: 'Example Author',
-          content: 'Example notes'
-        },
-        {
-          id: 6,
-          bookTitle: 'Example Title',
-          author: 'Example Author',
-          content: 'Example notes'
-        },
-        {
-          id: 7,
-          bookTitle: 'Example Title',
-          author: 'Example Author',
-          content: 'Example notes'
-        },
-        {
-          id: 8,
-          bookTitle: 'Example Title',
-          author: 'Example Author',
-          content: 'Example notes'
-        },
-        {
-          id: 9,
-          bookTitle: 'Example Title',
-          author: 'Example Author',
-          content: 'Example notes'
-        },
-        {
-          id: 10,
-          bookTitle: 'Example Title',
-          author: 'Example Author',
-          content: 'Example notes'
-        }
-      ];
-
-
-        setNotes(sampleNotes);
-      } catch (error) {
-        console.error('Error loading notes:', error);
+        const token = localStorage.getItem('token');
+        const res = await API.get('/notes', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setNotes(res.data);
+      } catch (err) {
+        console.error('Error fetching notes:', err);
       }
     };
 
     loadNotes();
   }, []);
 
-  // Filter notes based on search query
   const filteredNotes = notes.filter(note =>
     note.bookTitle.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Sort filtered notes based on selected sort option
   const sortedNotes = [...filteredNotes].sort((a, b) => {
     if (sortBy === 'title') {
       return a.bookTitle.localeCompare(b.bookTitle);
@@ -127,43 +55,22 @@ function NotesPage() {
     return 0;
   });
 
-  // Paginate notes
   const indexOfLastNote = currentPage * notesPerPage;
   const indexOfFirstNote = indexOfLastNote - notesPerPage;
   const currentNotes = sortedNotes.slice(indexOfFirstNote, indexOfLastNote);
   const totalPages = Math.ceil(sortedNotes.length / notesPerPage);
 
-  // Generate page numbers
   const generatePageNumbers = () => {
-    const pageNumbers = [];
-
-    // Always show first page
-    pageNumbers.push(1);
-
-    if (currentPage > 3) {
-      pageNumbers.push('...');
-    }
-
-    // Show current page and pages around it
+    const pageNumbers = [1];
+    if (currentPage > 3) pageNumbers.push('...');
     for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-      if (pageNumbers.indexOf(i) === -1) {
-        pageNumbers.push(i);
-      }
+      if (!pageNumbers.includes(i)) pageNumbers.push(i);
     }
-
-    if (currentPage < totalPages - 2) {
-      pageNumbers.push('...');
-    }
-
-    // Always show last page if there's more than one page
-    if (totalPages > 1) {
-      pageNumbers.push(totalPages);
-    }
-
+    if (currentPage < totalPages - 2) pageNumbers.push('...');
+    if (totalPages > 1) pageNumbers.push(totalPages);
     return pageNumbers;
   };
 
-  // Handle page change
   const handlePageChange = (pageNumber) => {
     if (pageNumber !== '...') {
       setCurrentPage(pageNumber);
@@ -171,69 +78,72 @@ function NotesPage() {
     }
   };
 
-  // Handle sorting change
   const handleSortChange = (sortType) => {
     setSortBy(sortType);
   };
 
-  // Handle search change
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    setCurrentPage(1); // Reset to first page when searching
+    setCurrentPage(1);
   };
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
-  // CRUD operations
-  const createNote = () => {
-    const newNote = {
-      id: notes.length ? Math.max(...notes.map(note => note.id)) + 1 : 1,
-      bookTitle: formData.bookTitle,
-      author: formData.author,
-      content: formData.content
-    };
-
-    setNotes([...notes, newNote]);
-    setIsCreateModalOpen(false);
-    resetForm();
+  const createNote = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await API.post('/notes', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setNotes([...notes, res.data]);
+      setIsCreateModalOpen(false);
+      resetForm();
+    } catch (err) {
+      console.error('Error creating note:', err);
+    }
   };
 
-  const updateNote = () => {
-    if (!currentNote) return;
-
-    const updatedNotes = notes.map(note =>
-      note.id === currentNote.id
-        ? {
-            ...note,
-            bookTitle: formData.bookTitle,
-            author: formData.author,
-            content: formData.content
-          }
-        : note
-    );
-
-    setNotes(updatedNotes);
-    setIsEditModalOpen(false);
-    resetForm();
+  const updateNote = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await API.put(`/notes/${currentNote._id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const updatedNotes = notes.map(note =>
+        note._id === res.data._id ? res.data : note
+      );
+      setNotes(updatedNotes);
+      setIsEditModalOpen(false);
+      resetForm();
+    } catch (err) {
+      console.error('Error updating note:', err);
+    }
   };
 
-  const deleteNote = () => {
-    if (!currentNote) return;
-
-    const filteredNotes = notes.filter(note => note.id !== currentNote.id);
-    setNotes(filteredNotes);
-    setIsDeleteModalOpen(false);
-    setCurrentNote(null);
+  const deleteNote = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await API.delete(`/notes/${currentNote._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const filtered = notes.filter(note => note._id !== currentNote._id);
+      setNotes(filtered);
+      setIsDeleteModalOpen(false);
+      setCurrentNote(null);
+    } catch (err) {
+      console.error('Error deleting note:', err);
+    }
   };
 
-  // Open modal handlers
   const openCreateModal = () => {
     resetForm();
     setIsCreateModalOpen(true);
@@ -254,13 +164,8 @@ function NotesPage() {
     setIsDeleteModalOpen(true);
   };
 
-  // Reset form
   const resetForm = () => {
-    setFormData({
-      bookTitle: '',
-      author: '',
-      content: ''
-    });
+    setFormData({ bookTitle: '', author: '', content: '' });
     setCurrentNote(null);
   };
 
@@ -317,7 +222,7 @@ function NotesPage() {
           ) : (
             <div className="notes-page-grid">
               {currentNotes.map(note => (
-                <div key={note.id} className="notes-page-card">
+                <div key={note._id} className="notes-page-card">
                   <div className="notes-page-book-title">{note.bookTitle}</div>
                   <div className="notes-page-author">by {note.author}</div>
                   <div className="notes-page-content">
