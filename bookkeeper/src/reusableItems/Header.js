@@ -1,11 +1,25 @@
 import './Header.css';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 function Header() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+
   const isActive = (path) => {
     return location.pathname === path;
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchQuery.trim()) {
+        navigate(`/book-search?q=${encodeURIComponent(searchQuery.trim())}`);
+      }
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, navigate]);
 
   return (
     <header className="app-header">
@@ -29,7 +43,12 @@ function Header() {
         </a>
 
         <div className="search-bar">
-          <input type="text" placeholder="Search books, notes or users..." />
+          <input
+            type="text"
+            placeholder="Search books, notes or users..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
 
         <div className="user-menu">

@@ -1,16 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Header from '../reusableItems/Header';
 import Footer from '../reusableItems/Footer';
 import '../assets/globalStyles/global.css';
 import './BookSearch.css';
 
 function BookSearch() {
+  const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedWebsite, setSelectedWebsite] = useState(null);
   const [showWebsiteModal, setShowWebsiteModal] = useState(false);
+
+  useEffect(() => {
+    const query = searchParams.get('q');
+    if (query) {
+      setSearchQuery(query);
+      handleOpenLibrarySearch({ preventDefault: () => {} });
+    }
+  }, [searchParams]);
 
   const handleOpenLibrarySearch = async (e) => {
     e.preventDefault();
