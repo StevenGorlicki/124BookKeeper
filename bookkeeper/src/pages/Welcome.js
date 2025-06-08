@@ -3,6 +3,8 @@ import './Welcome.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios';
+import { GoogleLogin } from '@react-oauth/google'; // Import GoogleLogin
+import { jwtDecode } from 'jwt-decode'; // Import jwtDecode
 
 function Welcome() {
   const [modalType, setModalType] = useState(null); // 'login' or 'signup'
@@ -42,6 +44,35 @@ function Welcome() {
     }
   };
 
+  // --- Google Login Handlers ---
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+      console.log("Google ID Token:", credentialResponse.credential); // <-- ADD THIS LINE
+    try {
+      // Decode the JWT token to get user information
+      const decoded = jwtDecode(credentialResponse.credential);
+      console.log('Google Login Success - Decoded User Info:', decoded);
+
+      // Send the Google credential to your backend for verification and user management
+      // This is crucial for security and creating a session on your server
+      const res = await API.post('/auth/google', { token: credentialResponse.credential });
+
+      localStorage.setItem('token', res.data.token); // Store your backend's token
+      setStatus('Google login successful!');
+      setTimeout(() => navigate('/notes'), 500);
+
+    } catch (error) {
+      console.error('Google login failed:', error);
+      setStatus('Google login failed. Please try again.');
+    }
+  };
+
+  const handleGoogleLoginError = () => {
+    console.log('Google Login Failed');
+    setStatus('Google login failed. Please try again.');
+  };
+  // --- End Google Login Handlers ---
+
+
   return (
     <div className="welcome-container">
       <header>
@@ -63,7 +94,17 @@ function Welcome() {
         </div>
 
         <div className="auth-options">
-          <a href="#" className="btn btn-secondary">Login with Google</a>
+          {/* Replace the anchor tag with the GoogleLogin component */}
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={handleGoogleLoginError}
+            // You can customize the button style if needed.
+            // For example, to match your existing button styles, you might need custom rendering
+            // For now, it will render the default Google button.
+            // theme="outline"
+            // size="large"
+            // text="signin_with"
+          />
           <button className="btn btn-primary" onClick={() => setModalType('signup')}>Create Account</button>
           <button className="btn btn-secondary" onClick={() => setModalType('login')}>Login with Email</button>
         </div>
