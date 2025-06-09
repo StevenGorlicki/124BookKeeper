@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import { googleLogin } from '../controllers/authController.js'; // Import the Google login function
 
 const router = express.Router();
 
@@ -37,5 +38,8 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ msg: 'Server error' });
   }
 });
+
+// Google Login - This was missing!
+router.post('/google', googleLogin);
 
 export default router;
