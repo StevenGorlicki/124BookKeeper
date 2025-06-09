@@ -6,6 +6,7 @@ import cors from 'cors';
 import listRoutes from './routes/listRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import noteRoutes from './routes/noteRoutes.js';
+import readingListRoutes from './routes/readingListRoutes.js';
 
 dotenv.config(); // ✅ Only once
 
@@ -17,6 +18,9 @@ app.use(express.json());
 app.use('/api/notes', noteRoutes);
 app.use('/api/lists', listRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/reading-lists', readingListRoutes);
+
+
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {

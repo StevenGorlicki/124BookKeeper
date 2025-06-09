@@ -102,6 +102,31 @@
   margin: 0;
 }
 
+.list-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-note-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.add-note-btn:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.1);
+}
+
 .delete-list-btn {
   background: transparent;
   border: none;
@@ -131,6 +156,31 @@
   margin-bottom: 14px;
   padding: 10px 12px;
   gap: 12px;
+  transition: all 0.2s ease;
+  position: relative;
+
+}
+.book-note-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 4px 6px;
+  cursor: pointer;
+  font-size: 12px;
+  z-index: 2;
+}
+
+.book-card.clickable {
+  cursor: pointer;
+}
+
+.book-card.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(43, 93, 80, 0.15);
+  background: var(--white);
 }
 
 .book-cover-placeholder {
@@ -180,6 +230,8 @@
 }
 
 /* Modal Styles */
+/* Replace your existing modal styles with these updated ones */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -188,91 +240,266 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
 }
 
 .modal-content {
-  background: var(--white);
+  background-color: white;
   border-radius: 8px;
-  padding: 24px;
   width: 90%;
-  max-width: 500px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: modal-appear 0.3s ease-out;
+}
+
+.modal-content.modal-sm {
+  max-width: 450px;
+}
+
+@keyframes modal-appear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.book-edit-modal {
+  max-width: 600px;
+}
+
+.note-modal {
+  max-width: 700px;
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
 }
 
 .modal-content h2 {
   color: var(--primary-dark);
-  margin-bottom: 20px;
+  margin: 0;
   font-size: 1.5rem;
 }
 
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+  color: var(--primary);
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+/* Modal Footer */
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+/* Form Styles */
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
   color: var(--text-dark);
 }
 
-.form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
   width: 100%;
-  padding: 10px;
+  padding: 0.8rem 1rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
+  transition: all 0.2s ease;
+  outline: none;
+  font-family: inherit;
 }
 
-.modal-actions {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(59, 93, 80, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.move-book-section {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--bg-light);
+  border-radius: 6px;
+}
+
+.move-book-section label {
+  display: block;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.move-buttons {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-.cancel-btn, .create-btn, .delete-btn {
-  padding: 10px 16px;
-  border-radius: 4px;
-  font-weight: 600;
+.move-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--primary);
+  border-radius: 20px;
+  background: white;
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.move-btn:hover:not(:disabled) {
+  background: var(--primary);
+  color: white;
+}
+
+.move-btn:disabled,
+.move-btn.current-list {
+  background: #f5f5f5;
+  color: var(--text-light);
+  border-color: #ddd;
+  cursor: not-allowed;
+}
+
+/* Button Styles */
+.cancel-btn, .create-btn, .delete-btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .cancel-btn {
-  background: #f0f0f0;
+  background: #f5f5f5;
   border: 1px solid #ddd;
   color: var(--text-dark);
+}
+
+.cancel-btn:hover {
+  background: #e8e8e8;
 }
 
 .create-btn {
   background: var(--primary);
-  border: 1px solid var(--primary-dark);
-  color: var(--white);
+  border: 1px solid var(--primary);
+  color: white;
+}
+
+.create-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .delete-btn {
-  background: #ff5252;
-  border: 1px solid #e04444;
-  color: var(--white);
+  background: #ff4d4f;
+  border: 1px solid #ff4d4f;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #ff3333;
 }
 
 .delete-warning {
   color: #666;
-  margin-bottom: 20px;
-  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
 }
-
-@media (max-width: 900px) {
-  .reading-list-columns {
-    flex-direction: column;
-    gap: 18px;
-    padding: 18px;
-  }
-
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 1.5rem;
+  border-top: 1px solid #eee;
+}
+@media (max-width: 768px) {
   .modal-content {
     width: 95%;
-    padding: 16px;
+    margin: 1rem;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-actions {
+    padding: 1rem;
+    justify-content: center;
+
+  }
+
+  .book-edit-modal,
+  .note-modal {
+    max-width: 95%;
+  }
+
+  .move-buttons {
+    flex-direction: column;
+  }
+
+  .move-btn {
+    text-align: center;
+    border-radius: 4px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .cancel-btn,
+  .create-btn,
+  .delete-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
