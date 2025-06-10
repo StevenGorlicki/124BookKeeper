@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from '../reusableItems/Footer';
 import Header from '../reusableItems/Header'
+import API from '../api/axios';
 import './Share.css';
 
 function Share() {
@@ -10,22 +11,78 @@ function Share() {
   const [shareLink, setShareLink] = useState('');
   const [copied, setCopied] = useState(false);
 
-  // Mock data - in a real app, this would come from your state management or API
-  const books = [
-    { id: 1, title: 'The Great Gatsby', progress: '75%' },
-    { id: 2, title: 'To Kill a Mockingbird', progress: '45%' },
-    { id: 3, title: 'The Hobbit', progress: '90%' }
-  ];
+  // State for real data
+  const [books, setBooks] = useState([]);
+  const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const notes = [
-    { id: 1, title: 'Thoughts on character development', book: 'The Great Gatsby' },
-    { id: 2, title: 'Themes analysis', book: 'To Kill a Mockingbird' },
-    { id: 3, title: 'World-building notes', book: 'The Hobbit' }
-  ];
+  // Load books and notes from backend
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const token = localStorage.getItem('token');
+
+        // Fetch reading lists to get all books
+        const listsRes = await API.get('/reading-lists', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        // Fetch notes
+        const notesRes = await API.get('/notes', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        // Extract all books from all lists
+        const allBooks = [];
+        listsRes.data.forEach(list => {
+          if (list.books && list.books.length > 0) {
+            list.books.forEach((book, index) => {
+              allBooks.push({
+                id: `${list._id}-${index}`, // Unique ID combining list ID and book index
+                title: book.title,
+                author: book.author,
+                progress: book.completion || '0%',
+                listId: list._id,
+                bookIndex: index,
+                listName: list.name
+              });
+            });
+          }
+        });
+
+        // Format notes data
+        const formattedNotes = notesRes.data.map(note => ({
+          id: note._id,
+          title: `Note on ${note.bookTitle}`,
+          book: note.bookTitle,
+          author: note.author,
+          content: note.content
+        }));
+
+        setBooks(allBooks);
+        setNotes(formattedNotes);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to load your books and notes');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
 
   const handleTypeChange = (type) => {
     setShareType(type);
     setShareLink('');
+    setSelectedBook('');
+    setSelectedNote('');
     setCopied(false);
   };
 
@@ -35,10 +92,10 @@ function Share() {
     let shareableLink = '';
 
     if (shareType === 'reading-progress' && selectedBook) {
-      const book = books.find(b => b.id === parseInt(selectedBook));
+      const book = books.find(b => b.id === selectedBook);
       shareableLink = `${baseUrl}progress/${selectedBook}`;
     } else if (shareType === 'notes' && selectedNote) {
-      const note = notes.find(n => n.id === parseInt(selectedNote));
+      const note = notes.find(n => n.id === selectedNote);
       shareableLink = `${baseUrl}note/${selectedNote}`;
     }
 
@@ -58,7 +115,18 @@ function Share() {
 
     let shareUrl = '';
     const encodedLink = encodeURIComponent(shareLink);
-    const encodedText = encodeURIComponent('Check out what I\'m reading on BookKeeper!');
+    let shareText = 'Check out what I\'m reading on BookKeeper!';
+
+    // Customize share text based on what's being shared
+    if (shareType === 'reading-progress' && selectedBook) {
+      const book = books.find(b => b.id === selectedBook);
+      shareText = `I'm ${book.progress} through "${book.title}" by ${book.author}! Check out my reading progress on BookKeeper!`;
+    } else if (shareType === 'notes' && selectedNote) {
+      const note = notes.find(n => n.id === selectedNote);
+      shareText = `Check out my notes on "${note.book}" on BookKeeper!`;
+    }
+
+    const encodedText = encodeURIComponent(shareText);
 
     switch (platform) {
       case 'facebook':
@@ -70,8 +138,8 @@ function Share() {
       case 'instagram':
         // Instagram doesn't have a web sharing API, so we'd typically just copy to clipboard
         // and instruct the user to paste it in Instagram. For now, we'll just copy to clipboard.
-        navigator.clipboard.writeText(shareLink);
-        alert('Link copied to clipboard. Open Instagram and paste in your story!');
+        navigator.clipboard.writeText(`${shareText} ${shareLink}`);
+        alert('Text and link copied to clipboard. Open Instagram and paste in your story!');
         return;
       case 'whatsapp':
         shareUrl = `https://wa.me/?text=${encodedText}%20${encodedLink}`;
@@ -82,6 +150,34 @@ function Share() {
 
     window.open(shareUrl, '_blank', 'width=600,height=400');
   };
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <div className="share-page">
+          <div className="container">
+            <div className="loading">Loading your books and notes...</div>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Header />
+        <div className="share-page">
+          <div className="container">
+            <div className="error">{error}</div>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -110,34 +206,42 @@ function Share() {
             {shareType === 'reading-progress' ? (
               <div className="form-group">
                 <label htmlFor="book-select">Select a book to share:</label>
-                <select
-                  id="book-select"
-                  value={selectedBook}
-                  onChange={(e) => setSelectedBook(e.target.value)}
-                >
-                  <option value="">Select a book</option>
-                  {books.map(book => (
-                    <option key={book.id} value={book.id}>
-                      {book.title} - {book.progress} complete
-                    </option>
-                  ))}
-                </select>
+                {books.length === 0 ? (
+                  <p className="no-data-message">No books found in your reading lists. Add some books to your reading lists first!</p>
+                ) : (
+                  <select
+                    id="book-select"
+                    value={selectedBook}
+                    onChange={(e) => setSelectedBook(e.target.value)}
+                  >
+                    <option value="">Select a book</option>
+                    {books.map(book => (
+                      <option key={book.id} value={book.id}>
+                        {book.title} by {book.author} - {book.progress} complete ({book.listName})
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
             ) : (
               <div className="form-group">
                 <label htmlFor="note-select">Select a note to share:</label>
-                <select
-                  id="note-select"
-                  value={selectedNote}
-                  onChange={(e) => setSelectedNote(e.target.value)}
-                >
-                  <option value="">Select a note</option>
-                  {notes.map(note => (
-                    <option key={note.id} value={note.id}>
-                      {note.title} - {note.book}
-                    </option>
-                  ))}
-                </select>
+                {notes.length === 0 ? (
+                  <p className="no-data-message">No notes found. Create some notes first!</p>
+                ) : (
+                  <select
+                    id="note-select"
+                    value={selectedNote}
+                    onChange={(e) => setSelectedNote(e.target.value)}
+                  >
+                    <option value="">Select a note</option>
+                    {notes.map(note => (
+                      <option key={note.id} value={note.id}>
+                        {note.title} by {note.author}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
             )}
 
@@ -145,8 +249,8 @@ function Share() {
               className="generate-link-btn"
               onClick={generateShareLink}
               disabled={
-                (shareType === 'reading-progress' && !selectedBook) ||
-                (shareType === 'notes' && !selectedNote)
+                (shareType === 'reading-progress' && (!selectedBook || books.length === 0)) ||
+                (shareType === 'notes' && (!selectedNote || notes.length === 0))
               }
             >
               Generate Shareable Link
@@ -225,20 +329,22 @@ function Share() {
               <div className="preview-container">
                 <h3>Preview</h3>
                 <div className="preview-card">
-                  {books.find(b => b.id === parseInt(selectedBook)) && (
+                  {books.find(b => b.id === selectedBook) && (
                     <>
                       <div className="preview-book-cover">
-                        <div className="book-cover-placeholder"></div>
+                        <div className="book-cover-placeholder">Book</div>
                       </div>
                       <div className="preview-content">
-                        <h4>{books.find(b => b.id === parseInt(selectedBook)).title}</h4>
+                        <h4>{books.find(b => b.id === selectedBook).title}</h4>
+                        <p className="preview-author">by {books.find(b => b.id === selectedBook).author}</p>
                         <div className="progress-bar">
                           <div
                             className="progress-fill"
-                            style={{width: books.find(b => b.id === parseInt(selectedBook)).progress}}
+                            style={{width: books.find(b => b.id === selectedBook).progress}}
                           ></div>
                         </div>
-                        <p>I'm {books.find(b => b.id === parseInt(selectedBook)).progress} through this book!</p>
+                        <p>I'm {books.find(b => b.id === selectedBook).progress} through this book!</p>
+                        <p className="preview-list">From my "{books.find(b => b.id === selectedBook).listName}" list</p>
                       </div>
                     </>
                   )}
@@ -250,7 +356,7 @@ function Share() {
               <div className="preview-container">
                 <h3>Preview</h3>
                 <div className="preview-card">
-                  {notes.find(n => n.id === parseInt(selectedNote)) && (
+                  {notes.find(n => n.id === selectedNote) && (
                     <>
                       <div className="preview-note-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -262,10 +368,14 @@ function Share() {
                         </svg>
                       </div>
                       <div className="preview-content">
-                        <h4>{notes.find(n => n.id === parseInt(selectedNote)).title}</h4>
-                        <p>From: {notes.find(n => n.id === parseInt(selectedNote)).book}</p>
+                        <h4>{notes.find(n => n.id === selectedNote).title}</h4>
+                        <p>From: {notes.find(n => n.id === selectedNote).book}</p>
+                        <p className="preview-author">by {notes.find(n => n.id === selectedNote).author}</p>
                         <p className="preview-note-text">
-                          Check out my notes on BookKeeper!
+                          {notes.find(n => n.id === selectedNote).content.length > 100
+                            ? notes.find(n => n.id === selectedNote).content.substring(0, 100) + '...'
+                            : notes.find(n => n.id === selectedNote).content
+                          }
                         </p>
                       </div>
                     </>
